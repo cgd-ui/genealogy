@@ -1,6 +1,6 @@
 <template>
     <div class="has-background-white">
-        <slot />
+        <Nuxt/>
     </div>
 </template>
 <script>

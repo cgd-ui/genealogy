@@ -1,20 +1,20 @@
 <template>
-	<Home/>
+  <Home/>
 </template>
-<script>
-import Home from '~/components/Home.vue'
+<script setup lang="ts">
+import Home from '~/components/Home';
 
-export default {
-	layout: 'index',
-	components: { Home },
-		meta: {
-			guestGuard: true,
-	},
+const name = "index";
 
-}
+const components = { Home };
+
+definePageMeta({
+  layout: "index",
+});
+
 </script>
-<router>
+<!-- <router>
 {
 	name: 'index'
 }
-</router>
+</router> -->
