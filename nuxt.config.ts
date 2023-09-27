@@ -7,7 +7,7 @@ const meta = getSiteMeta();
 export default defineNuxtConfig({
   ssr: false,
   // vite: false,
-  builder: 'webpack',
+  // builder: 'webpack',
   devtools: { enabled: false },
   app: {
     head: {
@@ -44,6 +44,9 @@ export default defineNuxtConfig({
       ],
     },
   },
+  alias: {
+    // "vuex": "../own-vuex"
+  },
   modules: [
     "@pinia/nuxt",
     // 'nuxt-bulma-slim'
@@ -76,7 +79,7 @@ export default defineNuxtConfig({
     // '~/plugins/ioRegister.js',
     // '~/plugins/tasksNavbarRegister.js',
     // '~/plugins/usersRegister.js',
-    // '~/plugins/Validator.js',
+    // '~/plugins/validator.js',
     // '~/plugins/date-fns/format.js',
     // '~/plugins/date-fns/formatDistance.js',
     // '~/plugins/vue-select.js',
@@ -101,62 +104,62 @@ export default defineNuxtConfig({
   // },
   // Build Configuration: https://go.nuxtjs.dev/config-build
 
-  webpack: {
-    filenames: {
-      app: ({ isDev }) => (isDev ? "[name].js" : "[chunkhash].js"),
-      chunk: ({ isDev }) => (isDev ? "[name].js" : "[chunkhash].js"),
-      css: ({ isDev }) => (isDev ? "[name].css" : "[contenthash].css"),
-      img: ({ isDev }) => (isDev ? "[path][name].[ext]" : "img/[hash:7].[ext]"),
-      font: ({ isDev }) =>
-        isDev ? "[path][name].[ext]" : "fonts/[hash:7].[ext]",
-      video: ({ isDev }) =>
-        isDev ? "[path][name].[ext]" : "videos/[hash:7].[ext]",
-    },
-    transpile: [
-      // "@enso-ui/strings",
-      // "vee-validate/dist/rules",
-      "@enso-ui/enums",
-      "@sentry/browser",
-      "@sentry/integrations",
-      "@enso-ui/sentry",
-      "@enso-ui/route-mapper",
-      // "d3-dag",
-    ],
-  },
-  hooks: {
-    'webpack:config' (configs) {
-      const isScssRule = (rule) => rule.test.toString() === "/\\.scss$/i";
-      configs[0].module.rules.forEach((rule) => {
-        if (isScssRule(rule)) {
-          const normalRule = rule.oneOf.find(
-            ({ resourceQuery, test }) =>
-              resourceQuery === undefined && test === undefined
-          );
+  // webpack: {
+  //   filenames: {
+  //     app: ({ isDev }) => (isDev ? "[name].js" : "[chunkhash].js"),
+  //     chunk: ({ isDev }) => (isDev ? "[name].js" : "[chunkhash].js"),
+  //     css: ({ isDev }) => (isDev ? "[name].css" : "[contenthash].css"),
+  //     img: ({ isDev }) => (isDev ? "[path][name].[ext]" : "img/[hash:7].[ext]"),
+  //     font: ({ isDev }) =>
+  //       isDev ? "[path][name].[ext]" : "fonts/[hash:7].[ext]",
+  //     video: ({ isDev }) =>
+  //       isDev ? "[path][name].[ext]" : "videos/[hash:7].[ext]",
+  //   },
+  //   transpile: [
+  //     // "@enso-ui/strings",
+  //     // "vee-validate/dist/rules",
+  //     "@enso-ui/enums",
+  //     "@sentry/browser",
+  //     "@sentry/integrations",
+  //     "@enso-ui/sentry",
+  //     "@enso-ui/route-mapper",
+  //     // "d3-dag",
+  //   ],
+  // },
+  // hooks: {
+  //   'webpack:config' (configs) {
+  //     const isScssRule = (rule) => rule.test.toString() === "/\\.scss$/i";
+  //     configs[0].module.rules.forEach((rule) => {
+  //       if (isScssRule(rule)) {
+  //         const normalRule = rule.oneOf.find(
+  //           ({ resourceQuery, test }) =>
+  //             resourceQuery === undefined && test === undefined
+  //         );
 
-          const lazyRule = cloneDeep(normalRule);
+  //         const lazyRule = cloneDeep(normalRule);
 
-          lazyRule.test = /\.lazy\.scss$/;
-          const idx = lazyRule.use.findIndex(({ loader }) =>
-            loader.includes("vue-style-loader")
-          );
-          if (idx > -1) {
-            lazyRule.use.splice(idx, 1, {
-              loader: "style-loader",
-              options: {
-                injectType: "lazyStyleTag",
-                insert: function insertAtTop(element) {
-                  const parent = document.querySelector("head");
-                  parent.insertBefore(element, parent.firstChild);
-                },
-              },
-            });
-          }
+  //         lazyRule.test = /\.lazy\.scss$/;
+  //         const idx = lazyRule.use.findIndex(({ loader }) =>
+  //           loader.includes("vue-style-loader")
+  //         );
+  //         if (idx > -1) {
+  //           lazyRule.use.splice(idx, 1, {
+  //             loader: "style-loader",
+  //             options: {
+  //               injectType: "lazyStyleTag",
+  //               insert: function insertAtTop(element) {
+  //                 const parent = document.querySelector("head");
+  //                 parent.insertBefore(element, parent.firstChild);
+  //               },
+  //             },
+  //           });
+  //         }
 
-          rule.oneOf.push(lazyRule);
-        }
-      });
-    },
-  },
+  //         rule.oneOf.push(lazyRule);
+  //       }
+  //     });
+  //   },
+  // },
   // 'vite:extendConfig' (clientConfig, { isClient, isServer }) {
 
   // },

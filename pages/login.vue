@@ -1,75 +1,63 @@
 <template>
-    <login-form action="Login" route="login" @success="init" />
-    <!-- <auth-form action="Login"
-        icon="user"
-        endpoint="login"
-        :payload="payload"
-        @success="init">
-        <email v-model="payload.email"/>
-        <password v-model="payload.password"/>
-        <remember v-model="payload.remember"
-            v-if="!isWebview"/>
-        <template v-slot:footer>
-            <nuxt-link class="is-pulled-right"
-                :to="{ name: 'password.email' }">
-                {{ i18n('Forgot password') }}
-            </nuxt-link>
-            <div class="is-clearfix"/>
-        </template>
-    </auth-form> -->
+  <login-form action="Login" route="login" @success="init" />
 </template>
-
 <script>
-// import { mapState, mapGetters, mapMutations } from 'vuex';
-import Errors from '@enso-ui/laravel-validation';
+
+import { mapActions, mapState } from "pinia";
+import Errors from "@enso-ui/laravel-validation";
+import { useMaintStore, useAuthStore, useLayoutStore } from "~/store";
+
 import LoginForm from '~/components/auth/LoginForm.vue';
-// import Email from '~/components/auth/fields/Email.vue';
-// import Password from '~/components/auth/fields/Password.vue';
-// import Remember from '~/components/auth/fields/Remember.vue';
 
 export default {
-    layout: 'index',
-    meta: {
-        guestGuard: true,
-        title: 'Login',
-    },
+ 
+  meta: {
+    guestGuard: true,
+    title: "Login",
+  },
 
-    components: { LoginForm },
+  components: { LoginForm },
+  setup() {
 
-    data: () => ({
-        errors: new Errors(),
-        payload: {
-            email: '',
-            password: '',
-            remember: false,
+    definePageMeta({
+      layout: "index",
+    });
+
+  },
+  data() {
+    return {
+      errors: new Errors(),
+      payload: {
+        email: "",
+        password: "",
+        remember: false,
+      },
+    };
+  },
+
+  computed: {
+    ...mapState(useMaintStore, ["meta"]),
+  },
+  methods: {
+    ...mapActions(useMaintStore, ["setShowQuote", "setCsrfToken"]),
+    ...mapActions(useAuthStore, ["login"]),
+    ...mapActions(useLayoutStore, ["home"]),
+    init(data) {
+      this.setShowQuote(this.meta.showQuote);
+      if (data?.csrfToken) {
+        this.setCsrfToken({ token: data.csrfToken, $axios: this.$axios });
+      }
+
+      setTimeout(() => {
+        if (data.role_id == 4) {
+          this.$router.push("/subscription");
+        } else {
+          this.$router.push("/dashboard");
         }
-    }),
-
-    computed: {
-        // ...mapState(['meta']),
-        // ...mapGetters(['isWebview']),
+        this.login();
+        this.home(true);
+      }, 500);
     },
-
-    methods: {
-        // ...mapMutations('auth', ['login']),
-        // ...mapMutations('layout', ['home']),
-        // ...mapMutations(['setShowQuote', 'setCsrfToken']),
-        init(data) {
-            this.setShowQuote(this.meta.showQuote);
-            if (data.csrfToken) {
-                this.setCsrfToken({token: data.csrfToken, $axios: this.$axios});
-            }
-
-            setTimeout(() => {
-                if (data.role_id == 4) {
-                    this.$router.push('/subscription');
-                } else {
-                    this.$router.push('/dashboard');
-                }
-                this.login();
-                this.home(true);
-            }, 500);
-        },
-    },
+  },
 };
 </script>

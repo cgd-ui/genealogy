@@ -1,13 +1,13 @@
-import { useAuthStore } from '~/store/auth.ts'
-import { useTestStore } from '~/store/test.ts'
+import { useMaintStore, useAuthStore, useLayoutStore } from "~/store";
 
 export default defineNuxtPlugin(({ $pinia }) => {
   return {
     provide: {
       store: {
+        main: useMaintStore($pinia),
         auth: useAuthStore($pinia),
-        test: useTestStore($pinia),
-      }
-    }
-  }
-})
+        layout: useLayoutStore($pinia),
+      },
+    },
+  };
+});
