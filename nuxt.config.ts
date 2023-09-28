@@ -8,6 +8,11 @@ export default defineNuxtConfig({
   ssr: false,
   // vite: false,
   // builder: 'webpack',
+  // env: {
+  //   STRIPE_PK: process.env.STRIPE_KEY,
+  //   HOSTNAME: process.env.HOSTNAME,
+  //   baseUrl: process.env.BASE_URL || "http://localhost:8000",
+  // },
   devtools: { enabled: false },
   app: {
     head: {
@@ -42,10 +47,15 @@ export default defineNuxtConfig({
           href: process.env.BASE_URL,
         },
       ],
+    },    
+  },
+  runtimeConfig: {
+    public: {
+      baseUrl: process.env.BASE_URL || "http://localhost:8000",
     },
   },
   alias: {
-    // "vuex": "../own-vuex"
+    "actions": "../actions"
   },
   modules: [
     "@pinia/nuxt",
@@ -172,4 +182,11 @@ export default defineNuxtConfig({
   //     }
   //   }
   // }
+  // nitro: {
+  //   devProxy: {
+  //     "/api/": process.env.BASE_URL || "http://localhost:8000",
+  //     "/sanctum/": process.env.BASE_URL || "http://localhost:8000",
+  //     "/broadcasting/": process.env.BASE_URL || "http://localhost:8000",
+  //   }
+  // },
 });

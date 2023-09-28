@@ -155,6 +155,7 @@ import {
 import { focus } from "@enso-ui/directives";
 import Errors from "@enso-ui/laravel-validation";
 import RevealPassword from "@enso-ui/forms/src/bulma/parts/RevealPassword.vue";
+import { $get, $post } from "actions/fetch.ts";
 
 library.add([faEnvelope, faCheck, faExclamationTriangle, faLock, faUser]);
 
@@ -234,48 +235,35 @@ export default {
       this.hasError = false;
       this.oldLogin();
     },
-    oldLogin() {
-      fetch("api.familytree365.com/sanctum/csrf-cookie", {
-        method: "GET",
-      }).then(() => {
-        fetch(
-          "api.familytree365.com/api/login",
-          {
-            method: "POST",
-            body: {
-              email: this.email,
-              password: this.password,
-            },
-          }
-
-          // this.config
-        )
-          .then(({ data }) => {
-            this.loading = false;
-            this.isSuccessful = true;
-            this.$emit("success", data);
-          })
-          .catch((error) => {
-            console.log("err", error);
-            this.loading = false;
-            const { status, data } = error.response;
-            switch (status) {
-              case 422:
-                this.errors = data.errors;
-                this.hasError = true;
-                break;
-              case 429:
-                // this.$toastr.error(data.message); // error Toastr can't displayed
-                this.message = data.message;
-                break;
-              case 500:
-                this.message = data.message;
-                this.$forceUpdate();
-                break;
-              default:
-                throw error;
-            }
-          });
+    async oldLogin() {
+      $post("/api/login", {
+            email: this.email,
+            password: this.password,
+      }).then(({ data }) => {
+        this.loading = false;
+        this.isSuccessful = true;
+        this.$emit("success", data);
+      })
+      .catch((error) => {
+        console.log("err", error);
+        this.loading = false;
+        const { status, data } = error.response;
+        switch (status) {
+          case 422:
+            this.errors = data.errors;
+            this.hasError = true;
+            break;
+          case 429:
+            // this.$toastr.error(data.message); // error Toastr can't displayed
+            this.message = data.message;
+            break;
+          case 500:
+            this.message = data.message;
+            this.$forceUpdate();
+            break;
+          default:
+            throw error;
+        }
       });
     },
   },
