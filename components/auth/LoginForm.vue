@@ -155,7 +155,7 @@ import {
 import { focus } from "@enso-ui/directives";
 import Errors from "@enso-ui/laravel-validation";
 import RevealPassword from "@enso-ui/forms/src/bulma/parts/RevealPassword.vue";
-import { $get, $post } from "actions/fetch.ts";
+import { $get, $post } from "actions/index.ts";
 
 library.add([faEnvelope, faCheck, faExclamationTriangle, faLock, faUser]);
 

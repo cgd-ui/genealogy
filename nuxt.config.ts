@@ -72,6 +72,7 @@ export default defineNuxtConfig({
     "~/assets/css/fan-chart/fan-chart.css",
   ],
   plugins: [
+    "~/plugins/action.ts",
     "~/plugins/pinia.ts",
     // '~/plugins/bootEnums.js',
     // '~/plugins/i18n.js',

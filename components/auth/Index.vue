@@ -6,7 +6,7 @@
           <div class="auth-content">
             <div class="has-text-centered">
               <NuxtLink to="/"
-                ><img src="~assets/images/logo1.svg" alt="" width="300px"
+                ><img src="~assets/images/logo1.svg" alt="" width="300"
               /></NuxtLink>
             </div>
             <div class="auth-inner-content my-6">
